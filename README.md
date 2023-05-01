@@ -1,6 +1,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# PythonHeap
+# K-ary PyHeap
+
+Open source k-ary (adressable) heaps written in Python.
 
 ## What is a heap [Answer by ChatGPT]
 
