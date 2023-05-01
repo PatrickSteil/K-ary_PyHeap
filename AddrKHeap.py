@@ -69,7 +69,7 @@ class AddrKHeap(object):
     def __child(self, i, j):
         return self.k * i + j
 
-    def insert(self, key, element_id):
+    def insert(self, element_id, key):
         self.heap.append(HeapElement(key, element_id, self.size))
         self.element_index[element_id] = self.size
         self.size += 1
@@ -124,7 +124,7 @@ class AddrKHeap(object):
 
     def update(self, element_id, new_key):
         if (not self.contains(element_id)):
-            self.insert(new_key, element_id)
+            self.insert(element_id, new_key)
         else:
             self.decreaseKey(element_id, new_key)
 

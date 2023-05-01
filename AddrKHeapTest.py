@@ -4,7 +4,7 @@ import random
 def test_addrkheap_insert_and_min_heap_property(k):
     heap = AddrKHeap(k)
     for i in range(1000):
-        heap.insert(random.randint(-1000, 1000), i)
+        heap.insert(i, random.randint(-1000, 1000))
     assert heap.is_heap()
 
 # Test case 2: Test extract_min method and min-heap property
@@ -12,7 +12,7 @@ def test_addrkheap_extract_min_and_min_heap_property(k):
     heap = AddrKHeap(k)
     elements = [random.randint(-1000, 1000) for i in range(1000)]
     for i in range(len(elements)):
-        heap.insert(elements[i], i)
+        heap.insert(i, elements[i])
     sorted_elements = sorted(elements)
     for i in range(heap.get_size()):
         assert heap.extract_min().get_key() == sorted_elements[i]
@@ -27,7 +27,7 @@ def test_addrkheap_extract_from_empty_heap(k):
 def test_addrkheap_decreaseKey(k):
     heap = AddrKHeap(k)
     for i in range(1000):
-        heap.insert(random.randint(-1000, 1000), i)
+        heap.insert(i, random.randint(-1000, 1000))
 
     heap.decreaseKey(100, -2000)
     assert heap.is_heap()
@@ -42,7 +42,7 @@ def test_addrkheap_decreaseKey(k):
 def test_addrkheap_remove(k):
     heap = AddrKHeap(k)
     for i in range(10):
-        heap.insert(random.randint(-1000, 1000), i)
+        heap.insert(i, random.randint(-1000, 1000))
 
     while (not heap.empty()):
         heap.remove(heap.front_element_id())
