@@ -13,10 +13,10 @@ class KHeap(object):
     def get_size(self):
         return self.size
 
-    def parent(self, i):
+    def __parent(self, i):
         return (i - 1) // self.k
 
-    def child(self, i, j):
+    def __child(self, i, j):
         return self.k * i + j
 
     def insert(self, key):
@@ -24,9 +24,16 @@ class KHeap(object):
         self.size += 1
         self.__sift_up(self.size - 1)
 
+    def insert_many(self, values):
+        self.heap.extend(values)
+        self.size += len(values)
+        
+        for i in range(self.size - len(values), self.size):
+            self.__sift_up(i)
+
     def __sift_up(self, i):
         while i > 0:
-            parent = self.parent(i)
+            parent = self.__parent(i)
             if self.heap[parent] > self.heap[i]:
                 self.heap[parent], self.heap[i] = self.heap[i], self.heap[parent]
                 i = parent
@@ -46,24 +53,24 @@ class KHeap(object):
         return min_element
 
     def __sift_down(self, i):
-        while self.child(i, 1) < self.size:
-            min_child = self.min_child(i)
+        while self.__child(i, 1) < self.size:
+            min_child = self.__min_child(i)
             if self.heap[i] > self.heap[min_child]:
                 self.heap[i], self.heap[min_child] = self.heap[min_child], self.heap[i]
                 i = min_child
             else:
                 break
 
-    def min_child(self, i):
-        min_child = self.child(i, 1)
+    def __min_child(self, i):
+        min_child = self.__child(i, 1)
         for j in range(2, self.k + 1):
-            if self.child(i, j) < self.size and self.heap[self.child(i, j)] < self.heap[min_child]:
-                min_child = self.child(i, j)
+            if self.__child(i, j) < self.size and self.heap[self.__child(i, j)] < self.heap[min_child]:
+                min_child = self.__child(i, j)
         return min_child
         
     def is_heap(self):
         for i in range(1, self.size):
-            parent = self.parent(i)
+            parent = self.__parent(i)
             if self.heap[parent] > self.heap[i]:
                 return False
         return True
