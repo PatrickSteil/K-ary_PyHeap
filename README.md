@@ -1,2 +1,2 @@
 # PythonHeap
-Wanted to implement a k-ary Heap in Python.
+This is an adressable k-ary heap in Python.
