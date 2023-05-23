@@ -25,7 +25,7 @@ class HeapElement(object):
 
     def get_key(self):
         return self.key
-    
+
     def get_element_id(self):
         return self.element_id
     
