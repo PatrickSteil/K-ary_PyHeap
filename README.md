@@ -4,7 +4,7 @@
 
 Open source k-ary (adressable) heaps written in Python.
 
-## What is a heap [Answer by ChatGPT]
+## What is a heap *Answer by ChatGPT*
 
 An addressable k-ary heap is a k-ary heap data structure variation that allows efficient manipulation of individual elements within the heap.
 
@@ -41,20 +41,19 @@ The AddrKHeap class provides the following methods:
 -   `remove(element_id)`: Removes the HeapElement object with the given element_id from the heap.
 -   `is_heap()`: Returns True if the heap satisfies the heap property, False otherwise.
 
-The AddrKHeap class uses an array to represent the binary tree structure of the heap. The elements in the array are indexed according to the level-order traversal of the binary tree, starting at index 0 for the root node. The `__parent` and `__child` methods are used to calculate the indices of a node's parent and children in the array. The `__sift_up` and `__sift_down` methods are used to restore the heap property after insertions and deletions. The element_index dictionary is used to map element_id values to the indices of the corresponding HeapElement objects in the heap array. This allows for constant-time updates and removals of elements by their element_id values.
+The AddrKHeap class uses an array to represent the k-ary tree structure of the heap. The elements in the array are indexed according to the level-order traversal of the tree, starting at index 0 for the root node. The `__parent` and `__child` methods are used to calculate the indices of a node's parent and children in the array. The `__sift_up` and `__sift_down` methods are used to restore the heap property after insertions and deletions. The element_index dictionary is used to map element_id values to the indices of the corresponding HeapElement objects in the heap array. This allows for constant-time updates and removals of elements by their element_id values.
 
 ## Dijkstra Example
 Here is a (very easy and untuned) Dijkstra example.
 ````
 from AddrKHeap import AddrKHeap
 
-
 G = {
-	'A': [('B', 10), ('C', 20)],
-	'B': [('C', 5), ('E', 100)],
-	'C': [('D', 10)],
-	'D': [('E', 15)],
-	'E': []
+  'A': [('B', 10), ('C', 20)],
+  'B': [('C', 5), ('E', 100)],
+  'C': [('D', 10)],
+  'D': [('E', 15)],
+  'E': []
 }
 
 
@@ -67,19 +66,14 @@ distances = {node: float("inf") for node in list(G.keys())}
 distances['A'] = 0
 
 while (not Q.empty()):
-	node = Q.deleteMinNode()
-	visited.add(node)
-
-	for (to, weight) in G[node]:
-		if (to in visited):
-			continue
-
-		if (distances[node] + weight < distances[to]):
-			distances[to] = distances[node] + weight
-
-			Q.update(to, distances[to])
-
+  node = Q.deleteMinNode()
+  visited.add(node)
+  for (to, weight) in G[node]:
+    if (to in visited):
+      continue
+    if (distances[node] + weight < distances[to]):
+      distances[to] = distances[node] + weight
+      Q.update(to, distances[to])
 print(distances)
 ````
-
 This yields `{'A': 0, 'B': 10, 'C': 15, 'D': 25, 'E': 40}`.
