@@ -13,7 +13,7 @@ def test_addrkheap_insert_and_min_heap_property(k):
 # Test case 2: Test extract_min method and min-heap property
 def test_addrkheap_extract_min_and_min_heap_property(k):
     heap = AddrKHeap(k)
-    elements = [random.randint(-1000, 1000) for i in range(N)]
+    elements = [random.randint(-1000, 1000) for _ in range(N)]
     for i in range(len(elements)):
         heap.insert(i, elements[i])
     sorted_elements = sorted(elements)
