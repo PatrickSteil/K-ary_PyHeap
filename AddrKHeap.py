@@ -81,7 +81,8 @@ class AddrKHeap:
         return min_element
 
     def deleteMinNode(self) -> Optional[int]:
-        return self.extract_min().element_id if self.extract_min() else None
+        min_extract = self.extract_min()
+        return min_extract.element_id if min_extract else None
 
     def update(self, element_id: int, new_key: int) -> None:
         if not self.contains(element_id):
