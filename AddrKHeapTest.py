@@ -1,64 +1,66 @@
-from AddrKHeap import AddrKHeap
 import random
+import unittest
+from AddrKHeap import AddrKHeap
 
 N = 1000
 
-# Test case 1: Test insert and the heap property
-def test_addrkheap_insert_and_min_heap_property(k):
-    heap = AddrKHeap(k)
-    for i in range(N):
-        heap.insert(i, random.randint(-1000, 1000))
-    assert heap.is_heap()
+class TestAddrKHeap(unittest.TestCase):
 
-# Test case 2: Test extract_min method and min-heap property
-def test_addrkheap_extract_min_and_min_heap_property(k):
-    heap = AddrKHeap(k)
-    elements = [random.randint(-1000, 1000) for _ in range(N)]
-    for i in range(len(elements)):
-        heap.insert(i, elements[i])
-    sorted_elements = sorted(elements)
-    for i in range(heap.get_size()):
-        assert heap.extract_min().get_key() == sorted_elements[i]
-        assert heap.is_heap()
+    def test_insert_and_min_heap_property(self):
+        ks = [2, 4, 8, 16]
+        for k in ks:
+            heap = AddrKHeap(k)
+            for i in range(N):
+                heap.insert(i, random.randint(-1000, 1000))
+            self.assertTrue(heap.is_heap(), f"Heap property violated for k={k}")
 
-# Test case 3: Test that extracting from an empty heap returns None
-def test_addrkheap_extract_from_empty_heap(k):
-    heap = AddrKHeap(k)
-    assert heap.extract_min() == None
+    def test_extract_min_and_min_heap_property(self):
+        ks = [2, 4, 8, 16]
+        for k in ks:
+            heap = AddrKHeap(k)
+            elements = [random.randint(-1000, 1000) for _ in range(N)]
+            for i in range(len(elements)):
+                heap.insert(i, elements[i])
+            sorted_elements = sorted(elements)
+            for i in range(heap.get_size()):
+                self.assertEqual(heap.extract_min().get_key(), sorted_elements[i], f"Extract min failed for k={k}")
+                self.assertTrue(heap.is_heap(), f"Heap property violated after extract min for k={k}")
 
-# Test case 4: Test that decreaseKey works properly
-def test_addrkheap_decreaseKey(k):
-    heap = AddrKHeap(k)
-    for i in range(N):
-        heap.insert(i, random.randint(-1000, 1000))
+    def test_extract_from_empty_heap(self):
+        ks = [2, 4, 8, 16]
+        for k in ks:
+            heap = AddrKHeap(k)
+            self.assertIsNone(heap.extract_min(), f"Expected None for empty heap for k={k}")
 
-    heap.decreaseKey(100, -2000)
-    assert heap.is_heap()
-    assert heap.front_key() == -2000 and heap.front_element_id() == 100
-    heap.extract_min()
+    def test_decreaseKey(self):
+        ks = [2, 4, 8, 16]
+        for k in ks:
+            heap = AddrKHeap(k)
+            for i in range(N):
+                heap.insert(i, random.randint(-1000, 1000))
 
-    heap.decreaseKey(200, -2000)
-    assert heap.is_heap()
-    assert heap.front_key() == -2000 and heap.front_element_id() == 200
+            heap.decreaseKey(100, -2000)
+            self.assertTrue(heap.is_heap(), f"Heap property violated after decreaseKey for k={k}")
+            self.assertEqual(heap.front_key(), -2000)
+            self.assertEqual(heap.front_element_id(), 100)
+            heap.extract_min()
 
-# Test case 5: Test that remove works properly
-def test_addrkheap_remove(k):
-    heap = AddrKHeap(k)
-    for i in range(10):
-        heap.insert(i, random.randint(-1000, 1000))
+            heap.decreaseKey(200, -2000)
+            self.assertTrue(heap.is_heap(), f"Heap property violated after decreaseKey for k={k}")
+            self.assertEqual(heap.front_key(), -2000)
+            self.assertEqual(heap.front_element_id(), 200)
 
-    while (not heap.empty()):
-        heap.remove(heap.front_element_id())
-        assert heap.is_heap()
+    def test_remove(self):
+        ks = [2, 4, 8, 16]
+        for k in ks:
+            heap = AddrKHeap(k)
+            for i in range(10):
+                heap.insert(i, random.randint(-1000, 1000))
 
+            while not heap.empty():
+                heap.remove(heap.front_element_id())
+                self.assertTrue(heap.is_heap(), f"Heap property violated after remove for k={k}")
 
-ks = [2, 4, 8, 16]
+if __name__ == "__main__":
+    unittest.main()
 
-for k in ks:
-    test_addrkheap_insert_and_min_heap_property(k)
-    test_addrkheap_extract_min_and_min_heap_property(k)
-    test_addrkheap_extract_from_empty_heap(k)
-    test_addrkheap_decreaseKey(k)
-    test_addrkheap_remove(k)
-
-print("All test cases passed!")

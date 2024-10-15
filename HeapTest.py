@@ -1,43 +1,43 @@
-from Heap import KHeap
 import random
+import unittest
+from Heap import KHeap
 
-# Test case 1: Test insert method and min-heap property
-def test_kheap_insert_and_min_heap_property(k):
-    heap = KHeap(k)
-    for _ in range(1000):
-        heap.insert(random.randint(-1000, 1000))
-    assert heap.is_heap()
+class TestKHeap(unittest.TestCase):
 
-# Test case 2: Test insert method and min-heap property
-def test_kheap_insert_many_and_min_heap_property(k):
-    heap = KHeap(k)
-    data = [random.randint(-1000, 1000) for _ in range(1000)]
-    heap.insert_many(data)
-    assert heap.is_heap()
+    def test_insert_and_min_heap_property(self):
+        ks = [2, 4, 8, 16]
+        for k in ks:
+            heap = KHeap(k)
+            for _ in range(1000):
+                heap.insert(random.randint(-1000, 1000))
+            self.assertTrue(heap.is_heap(), f"Heap property violated for k={k}")
 
-# Test case 3: Test extract_min method and min-heap property
-def test_kheap_extract_min_and_min_heap_property(k):
-    heap = KHeap(k)
-    elements = [random.randint(-1000, 1000) for _ in range(1000)]
-    for element in elements:
-        heap.insert(element)
-    sorted_elements = sorted(elements)
-    for i in range(heap.get_size()):
-        assert heap.extract_min() == sorted_elements[i]
-        assert heap.is_heap()
+    def test_insert_many_and_min_heap_property(self):
+        ks = [2, 4, 8, 16]
+        for k in ks:
+            heap = KHeap(k)
+            data = [random.randint(-1000, 1000) for _ in range(1000)]
+            heap.insert_many(data)
+            self.assertTrue(heap.is_heap(), f"Heap property violated after insert_many for k={k}")
 
-# Test case 4: Test that extracting from an empty heap returns None
-def test_kheap_extract_from_empty_heap(k):
-    heap = KHeap(k)
-    assert heap.extract_min() == None
+    def test_extract_min_and_min_heap_property(self):
+        ks = [2, 4, 8, 16]
+        for k in ks:
+            heap = KHeap(k)
+            elements = [random.randint(-1000, 1000) for _ in range(1000)]
+            for element in elements:
+                heap.insert(element)
+            sorted_elements = sorted(elements)
+            for i in range(heap.get_size()):
+                self.assertEqual(heap.extract_min(), sorted_elements[i], f"Extract min failed for k={k}")
+                self.assertTrue(heap.is_heap(), f"Heap property violated after extract min for k={k}")
 
+    def test_extract_from_empty_heap(self):
+        ks = [2, 4, 8, 16]
+        for k in ks:
+            heap = KHeap(k)
+            self.assertIsNone(heap.extract_min(), f"Expected None for empty heap for k={k}")
 
-ks = [2, 4, 8, 16]
+if __name__ == "__main__":
+    unittest.main()
 
-for k in ks:
-    test_kheap_insert_and_min_heap_property(k)
-    test_kheap_insert_many_and_min_heap_property(k)
-    test_kheap_extract_min_and_min_heap_property(k)
-    test_kheap_extract_from_empty_heap(k)
-
-print("All test cases passed!")
