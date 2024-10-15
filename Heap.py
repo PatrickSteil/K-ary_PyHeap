@@ -9,81 +9,103 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 """
 
 import array
+from typing import List, Optional
 
-class KHeap(object):
-    def __init__(self, k = 4):
-        assert k >= 2
-        self.k = k
-        self.heap = array.array('l')
-        self.size = 0
-        
-    def empty(self):
-        return not self.size
 
-    def get_size(self):
+class KHeap:
+    def __init__(self, k: int = 4):
+        assert k >= 2, "k must be at least 2"
+        self.k: int = k
+        self.heap: array.array = array.array("l")
+        self.size: int = 0
+
+    def empty(self) -> bool:
+        """Returns True if the heap is empty."""
+        return self.size == 0
+
+    def get_size(self) -> int:
+        """Returns the number of elements in the heap."""
         return self.size
 
-    def __parent(self, i):
-        return (i - 1) // self.k
+    def __parent(self, index: int) -> int:
+        """Returns the index of the parent of the given index."""
+        return (index - 1) // self.k
 
-    def __child(self, i, j):
-        return self.k * i + j
+    def __child(self, index: int, child_index: int) -> int:
+        """Returns the index of the child of the given index."""
+        return self.k * index + child_index
 
-    def insert(self, key):
+    def insert(self, key: int) -> None:
+        """Inserts a new key into the heap."""
         self.heap.append(key)
         self.size += 1
         self.__sift_up(self.size - 1)
 
-    def insert_many(self, values):
+    def insert_many(self, values: List[int]) -> None:
+        """Inserts multiple keys into the heap."""
         self.heap.extend(values)
         self.size += len(values)
-        
+        # Sift up only the newly inserted elements
         for i in range(self.size - len(values), self.size):
             self.__sift_up(i)
 
-    def __sift_up(self, i):
-        while i > 0:
-            parent = self.__parent(i)
-            if self.heap[parent] > self.heap[i]:
-                self.heap[parent], self.heap[i] = self.heap[i], self.heap[parent]
-                i = parent
+    def __sift_up(self, index: int) -> None:
+        """Restores the heap property by sifting up the element at the given index."""
+        while index > 0:
+            parent_index = self.__parent(index)
+            if self.heap[parent_index] > self.heap[index]:
+                self.heap[parent_index], self.heap[index] = (
+                    self.heap[index],
+                    self.heap[parent_index],
+                )
+                index = parent_index
             else:
                 break
 
-    def extract_min(self):
-        if self.size == 0:
+    def extract_min(self) -> Optional[int]:
+        """Removes and returns the smallest key from the heap."""
+        if self.empty():
             return None
         min_element = self.heap[0]
-        last_element = self.heap[self.size - 1]
-        self.heap.pop()
+        last_element = self.heap.pop()
         self.size -= 1
         if self.size > 0:
             self.heap[0] = last_element
             self.__sift_down(0)
         return min_element
 
-    def __sift_down(self, i):
-        while self.__child(i, 1) < self.size:
-            min_child = self.__min_child(i)
-            if self.heap[i] > self.heap[min_child]:
-                self.heap[i], self.heap[min_child] = self.heap[min_child], self.heap[i]
-                i = min_child
-            else:
+    def __sift_down(self, index: int) -> None:
+        """Restores the heap property by sifting down the element at the given index."""
+        while True:
+            min_child_index = self.__min_child(index)
+            if (
+                min_child_index is None
+                or self.heap[index] <= self.heap[min_child_index]
+            ):
                 break
+            self.heap[index], self.heap[min_child_index] = (
+                self.heap[min_child_index],
+                self.heap[index],
+            )
+            index = min_child_index
 
-    def __min_child(self, i):
-        min_child = self.__child(i, 1)
-        for j in range(2, self.k + 1):
-            if self.__child(i, j) < self.size and self.heap[self.__child(i, j)] < self.heap[min_child]:
-                min_child = self.__child(i, j)
-        return min_child
-        
-    def is_heap(self):
-        for i in range(1, self.size):
-            parent = self.__parent(i)
-            if self.heap[parent] > self.heap[i]:
-                return False
-        return True
-        
-    def __str__(self):
-        return str(self.heap)
+    def __min_child(self, index: int) -> Optional[int]:
+        """Returns the index of the smallest child for the given index."""
+        min_index = None
+        for j in range(1, self.k + 1):
+            child_index = self.__child(index, j)
+            if child_index < self.size and (
+                min_index is None or self.heap[child_index] < self.heap[min_index]
+            ):
+                min_index = child_index
+        return min_index
+
+    def is_heap(self) -> bool:
+        """Checks if the heap maintains the heap property."""
+        return all(
+            self.heap[self.__parent(i)] <= self.heap[i] for i in range(1, self.size)
+        )
+
+    def __str__(self) -> str:
+        """Returns a string representation of the heap."""
+        return str(self.heap.tolist())  # Convert to list for better readability
